@@ -1,11 +1,16 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var aurelia_dependency_injection_1 = require("aurelia-dependency-injection");
 var aurelia_event_aggregator_1 = require("aurelia-event-aggregator");
 var LogManager = require("aurelia-logging");
 var aurelia_pal_1 = require("aurelia-pal");
 var configure_1 = require("./configure");
-aurelia_dependency_injection_1.inject(aurelia_event_aggregator_1.EventAggregator, configure_1.Configure);
 var TagManager = /** @class */ (function () {
     function TagManager(eventAggregator, configuration) {
         this._initialized = false;
@@ -74,6 +79,9 @@ var TagManager = /** @class */ (function () {
             'url': path
         });
     };
+    TagManager = __decorate([
+        aurelia_dependency_injection_1.inject(aurelia_event_aggregator_1.EventAggregator, configure_1.Configure)
+    ], TagManager);
     return TagManager;
 }());
 exports.TagManager = TagManager;

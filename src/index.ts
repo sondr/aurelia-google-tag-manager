@@ -1,6 +1,6 @@
 import { FrameworkConfiguration } from 'aurelia-framework';
 import { TagManager } from './tag-manager';
-//import { Configure, ConfigInterface } from './configure';
+import { Configure  } from './configure';
 
 export function configure(aurelia: FrameworkConfiguration, configCallback?: (config: any) => Promise<any>) {
 
@@ -13,4 +13,5 @@ export function configure(aurelia: FrameworkConfiguration, configCallback?: (con
     //aurelia.globalResources([]);
 }
 
-//export { TagManager };
+export { Configure };
+export { TagManager };

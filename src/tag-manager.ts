@@ -5,7 +5,7 @@ import { PLATFORM, DOM } from 'aurelia-pal';
 import { Configure, ConfigInterface } from './configure';
 
 
-inject(EventAggregator, Configure)
+@inject(EventAggregator, Configure)
 export class TagManager {
     private _eventAggregator: EventAggregator;
     private _initialized: boolean;
