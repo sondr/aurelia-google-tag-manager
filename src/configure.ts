@@ -1,15 +1,33 @@
 export interface OptionsInterface {
     key: string;
     enabled: boolean;
-    pageTracking: PropertyOptions;
-    logging: PropertyOptions;
-    [key: string]: string | boolean | PropertyOptions;
+    pageTracking: PropertyOption;
+    logging: PropertyOption;
+    [key: string]: string | boolean | PropertyOption;
 }
 
-export interface PropertyOptions {
+export interface PropertyOptionsInterface {
     name?: string;
     enabled?: boolean;
-    toggleEnabled: (value?: boolean) => void
+    //toggleEnabled: (value?: boolean) => void
+}
+
+export class PropertyOption implements PropertyOptionsInterface {
+    public name = '';
+    public enabled = false;
+
+    constructor(enable?: boolean, name?: string) {
+        this.enabled = enable === true;
+        this.name = name || this.name;
+    }
+
+    public enable(): void {
+        this.enabled = true;
+    }
+
+    public disable(): void {
+        this.enabled = false;
+    }
 }
 
 
@@ -20,15 +38,8 @@ export class Configure {
         this._options = {
             key: '',
             enabled: true,
-            pageTracking: {
-                name: 'PageView',
-                enabled: true,
-                toggleEnabled: (value) => { this._options.pageTracking.enabled = value || !this._options.pageTracking.enabled }
-            },
-            logging: {
-                enabled: false,
-                toggleEnabled: (value) => { this._options.logging.enabled = value || !this._options.logging.enabled }
-            }
+            pageTracking: new PropertyOption(true, 'PageView'),
+            logging: new PropertyOption()
         };
     }
 

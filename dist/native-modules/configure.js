@@ -1,18 +1,26 @@
+var PropertyOption = /** @class */ (function () {
+    function PropertyOption(enable, name) {
+        this.name = '';
+        this.enabled = false;
+        this.enabled = enable === true;
+        this.name = name || this.name;
+    }
+    PropertyOption.prototype.enable = function () {
+        this.enabled = true;
+    };
+    PropertyOption.prototype.disable = function () {
+        this.enabled = false;
+    };
+    return PropertyOption;
+}());
+export { PropertyOption };
 var Configure = /** @class */ (function () {
     function Configure() {
-        var _this = this;
         this._options = {
             key: '',
             enabled: true,
-            pageTracking: {
-                name: 'PageView',
-                enabled: true,
-                toggleEnabled: function (value) { _this._options.pageTracking.enabled = value || !_this._options.pageTracking.enabled; }
-            },
-            logging: {
-                enabled: false,
-                toggleEnabled: function (value) { _this._options.logging.enabled = value || !_this._options.logging.enabled; }
-            }
+            pageTracking: new PropertyOption(true, 'PageView'),
+            logging: new PropertyOption()
         };
     }
     Configure.prototype.options = function (opts) {

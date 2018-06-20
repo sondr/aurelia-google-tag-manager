@@ -1,25 +1,33 @@
 System.register([], function (exports_1, context_1) {
     "use strict";
-    var Configure;
+    var PropertyOption, Configure;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
+            PropertyOption = /** @class */ (function () {
+                function PropertyOption(enable, name) {
+                    this.name = '';
+                    this.enabled = false;
+                    this.enabled = enable === true;
+                    this.name = name || this.name;
+                }
+                PropertyOption.prototype.enable = function () {
+                    this.enabled = true;
+                };
+                PropertyOption.prototype.disable = function () {
+                    this.enabled = false;
+                };
+                return PropertyOption;
+            }());
+            exports_1("PropertyOption", PropertyOption);
             Configure = /** @class */ (function () {
                 function Configure() {
-                    var _this = this;
                     this._options = {
                         key: '',
                         enabled: true,
-                        pageTracking: {
-                            name: 'PageView',
-                            enabled: true,
-                            toggleEnabled: function (value) { _this._options.pageTracking.enabled = value || !_this._options.pageTracking.enabled; }
-                        },
-                        logging: {
-                            enabled: false,
-                            toggleEnabled: function (value) { _this._options.logging.enabled = value || !_this._options.logging.enabled; }
-                        }
+                        pageTracking: new PropertyOption(true, 'PageView'),
+                        logging: new PropertyOption()
                     };
                 }
                 Configure.prototype.options = function (opts) {
