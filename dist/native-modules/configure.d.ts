@@ -1,9 +1,9 @@
 export interface OptionsInterface {
     key: string;
     enabled: boolean;
-    pageTracking: PropertyOption;
-    logging: PropertyOption;
-    [key: string]: string | boolean | PropertyOption;
+    pageTracking: PropertyOptionsInterface;
+    logging: PropertyOptionsInterface;
+    [key: string]: string | boolean | PropertyOptionsInterface;
 }
 export interface PropertyOptionsInterface {
     name?: string;
@@ -21,5 +21,5 @@ export declare class Configure {
     constructor();
     options(opts: string | OptionsInterface): OptionsInterface;
     getOptions(): OptionsInterface;
-    get(key: string): string | boolean | PropertyOption;
+    get(key: string): string | boolean | PropertyOptionsInterface;
 }
