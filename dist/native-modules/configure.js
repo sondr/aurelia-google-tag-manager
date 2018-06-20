@@ -1,14 +1,17 @@
 var Configure = /** @class */ (function () {
     function Configure() {
+        var _this = this;
         this._options = {
             key: '',
             enabled: true,
             pageTracking: {
                 name: 'PageView',
-                enabled: true
+                enabled: true,
+                toggleEnabled: function (value) { _this._options.pageTracking.enabled = value || !_this._options.pageTracking.enabled; }
             },
             logging: {
-                enabled: false
+                enabled: false,
+                toggleEnabled: function (value) { _this._options.logging.enabled = value || !_this._options.logging.enabled; }
             }
         };
     }

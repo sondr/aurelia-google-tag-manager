@@ -1,8 +1,8 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { Configure, OptionsInterface } from './configure';
 export declare class TagManager {
-    private _noScriptElement;
-    private _scriptElement;
+    private _noScriptElement?;
+    private _scriptElement?;
     private _subscriptions;
     private _flags;
     private _eventAggregator;

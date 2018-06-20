@@ -21,28 +21,33 @@ var TagManager = /** @class */ (function () {
     TagManager.prototype.init = function (initData) {
         var data = this._settings.options(initData);
         this._options = data;
-        if (this._checkSettings(data))
-            this._setup();
+        this._setup();
     };
     TagManager.prototype.enable = function () {
-        this._setup();
         this._options.enabled = true;
+        this._setup();
     };
     TagManager.prototype.disable = function () {
+        this._options.enabled = false;
         if (this._subscriptions.pageTracker)
             this._subscriptions.pageTracker.dispose();
         this._detachScripts();
-        this._options.enabled = false;
+        if (this._options.logging.enabled)
+            this._log('info', 'Tag-Manager disabled');
     };
     TagManager.prototype.isActive = function () {
         return this._options.enabled === true;
     };
     TagManager.prototype._setup = function () {
+        if (this._checkSettings(this._options))
+            return;
         if (!this._flags.scriptsAttached)
             this._attachScriptElements(this._options.key);
         if (this._options.pageTracking.enabled === true)
             this._attachPageTracker();
         this._initialized = true;
+        if (this._options.logging.enabled)
+            this._log('info', 'Tag-Manager started');
     };
     TagManager.prototype._checkSettings = function (opts) {
         var valid = true, logtext = '', level = 'info';
@@ -60,24 +65,25 @@ var TagManager = /** @class */ (function () {
         return valid;
     };
     TagManager.prototype._attachScriptElements = function (key) {
-        var scriptElement = DOM.createElement('script');
-        scriptElement.text = "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0]," +
-            "j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);" +
-            ("})(window,document,'script','dataLayer','" + key + "');");
-        var noscriptElement = DOM.createElement('noscript');
-        var iframeElement = DOM.createElement('iframe');
-        iframeElement.height = '0';
-        iframeElement.width = '0';
-        iframeElement.style.display = 'none';
-        iframeElement.style.visibility = 'hidden';
-        iframeElement.src = "https://www.googletagmanager.com/ns.html?id=" + key;
-        noscriptElement.appendChild(iframeElement);
-        this._scriptElement = scriptElement;
-        this._noScriptElement = noscriptElement;
-        if (!this._scriptElement)
+        if (!this._scriptElement) {
+            var scriptElement = DOM.createElement('script');
+            scriptElement.text = "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0]," +
+                "j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);" +
+                ("})(window,document,'script','dataLayer','" + key + "');");
+            this._scriptElement = scriptElement;
             DOM.querySelector('head').appendChild(this._scriptElement);
+        }
         //DOM.querySelector('body').appendChild(noscriptElement);
         if (!this._noScriptElement) {
+            var noscriptElement = DOM.createElement('noscript');
+            var iframeElement = DOM.createElement('iframe');
+            iframeElement.height = '0';
+            iframeElement.width = '0';
+            iframeElement.style.display = 'none';
+            iframeElement.style.visibility = 'hidden';
+            iframeElement.src = "https://www.googletagmanager.com/ns.html?id=" + key;
+            noscriptElement.appendChild(iframeElement);
+            this._noScriptElement = noscriptElement;
             var body = DOM.querySelector('body');
             body.insertBefore(this._noScriptElement, body.firstChild);
         }
@@ -91,6 +97,7 @@ var TagManager = /** @class */ (function () {
                 var parent_1 = el.parentNode;
                 if (parent_1)
                     parent_1.removeChild(el);
+                el = undefined;
             }
         });
     };

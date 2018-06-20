@@ -8,8 +8,8 @@ import { Disposable } from 'aurelia-binding';
 
 @inject(EventAggregator, Configure)
 export class TagManager {
-    private _noScriptElement: HTMLElement;
-    private _scriptElement: HTMLScriptElement;
+    private _noScriptElement?: HTMLElement;
+    private _scriptElement?: HTMLScriptElement;
     private _subscriptions: { pageTracker?: Disposable } = { pageTracker: undefined };
     private _flags: { scriptsAttached: boolean } = { scriptsAttached: false };
     private _eventAggregator: EventAggregator;
@@ -31,19 +31,19 @@ export class TagManager {
         let data = this._settings.options(initData);
         this._options = data;
 
-        if (this._checkSettings(data))
-            this._setup();
+        this._setup();
     }
 
     public enable() {
-        this._setup();
         this._options.enabled = true;
+        this._setup();
     }
 
     public disable() {
+        this._options.enabled = false;
         if (this._subscriptions.pageTracker) this._subscriptions.pageTracker.dispose();
         this._detachScripts();
-        this._options.enabled = false;
+        if (this._options.logging.enabled) this._log('info', 'Tag-Manager disabled');
     }
 
     public isActive() {
@@ -51,10 +51,14 @@ export class TagManager {
     }
 
     private _setup() {
+        if (this._checkSettings(this._options)) return;
+
         if (!this._flags.scriptsAttached) this._attachScriptElements(this._options.key);
         if (this._options.pageTracking.enabled === true) this._attachPageTracker();
 
         this._initialized = true;
+
+        if (this._options.logging.enabled) this._log('info', 'Tag-Manager started');
     }
 
     private _checkSettings(opts: OptionsInterface) {
@@ -73,26 +77,28 @@ export class TagManager {
     }
 
     private _attachScriptElements(key: string) {
-        const scriptElement = DOM.createElement('script') as HTMLScriptElement;
-        scriptElement.text = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],` +
-            `j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);` +
-            `})(window,document,'script','dataLayer','${key}');`
+        if (!this._scriptElement) {
+            const scriptElement = DOM.createElement('script') as HTMLScriptElement;
+            scriptElement.text = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],` +
+                `j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);` +
+                `})(window,document,'script','dataLayer','${key}');`
 
-        const noscriptElement = DOM.createElement('noscript');
-        const iframeElement = DOM.createElement('iframe') as HTMLIFrameElement;
-        iframeElement.height = '0';
-        iframeElement.width = '0';
-        iframeElement.style.display = 'none';
-        iframeElement.style.visibility = 'hidden';
-        iframeElement.src = `https://www.googletagmanager.com/ns.html?id=${key}`;
-        noscriptElement.appendChild(iframeElement);
+            this._scriptElement = scriptElement;
+            DOM.querySelector('head').appendChild(this._scriptElement);
+        }
 
-        this._scriptElement = scriptElement;
-        this._noScriptElement = noscriptElement;
-
-        if (!this._scriptElement) DOM.querySelector('head').appendChild(this._scriptElement);
         //DOM.querySelector('body').appendChild(noscriptElement);
         if (!this._noScriptElement) {
+            const noscriptElement = DOM.createElement('noscript');
+            const iframeElement = DOM.createElement('iframe') as HTMLIFrameElement;
+            iframeElement.height = '0';
+            iframeElement.width = '0';
+            iframeElement.style.display = 'none';
+            iframeElement.style.visibility = 'hidden';
+            iframeElement.src = `https://www.googletagmanager.com/ns.html?id=${key}`;
+            noscriptElement.appendChild(iframeElement);
+
+            this._noScriptElement = noscriptElement;
             const body = DOM.querySelector('body') as HTMLBodyElement;
             body.insertBefore(this._noScriptElement, body.firstChild);
         }
@@ -108,6 +114,7 @@ export class TagManager {
             if (el) {
                 const parent = el.parentNode;
                 if (parent) parent.removeChild(el);
+                el = undefined;
             }
         });
     }

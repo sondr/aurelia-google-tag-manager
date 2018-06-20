@@ -9,6 +9,7 @@ export interface OptionsInterface {
 export interface PropertyOptions {
     name?: string;
     enabled?: boolean;
+    toggleEnabled: (value?: boolean) => void
 }
 
 
@@ -21,10 +22,12 @@ export class Configure {
             enabled: true,
             pageTracking: {
                 name: 'PageView',
-                enabled: true
+                enabled: true,
+                toggleEnabled: (value) => { this._options.pageTracking.enabled = value || !this._options.pageTracking.enabled }
             },
             logging: {
-                enabled: false
+                enabled: false,
+                toggleEnabled: (value) => { this._options.logging.enabled = value || !this._options.logging.enabled }
             }
         };
     }

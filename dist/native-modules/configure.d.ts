@@ -8,6 +8,7 @@ export interface OptionsInterface {
 export interface PropertyOptions {
     name?: string;
     enabled?: boolean;
+    toggleEnabled: (value?: boolean) => void;
 }
 export declare class Configure {
     private _options;
