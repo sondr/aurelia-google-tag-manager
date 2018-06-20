@@ -57,7 +57,7 @@ System.register(["aurelia-dependency-injection", "aurelia-event-aggregator", "au
                     return this._options.enabled === true;
                 };
                 TagManager.prototype._setup = function () {
-                    if (this._checkSettings(this._options))
+                    if (!this._checkSettings(this._options))
                         return;
                     if (!this._flags.scriptsAttached)
                         this._attachScriptElements(this._options.key);

@@ -51,7 +51,7 @@ export class TagManager {
     }
 
     private _setup() {
-        if (this._checkSettings(this._options)) return;
+        if (!this._checkSettings(this._options)) return;
 
         if (!this._flags.scriptsAttached) this._attachScriptElements(this._options.key);
         if (this._options.pageTracking.enabled === true) this._attachPageTracker();
