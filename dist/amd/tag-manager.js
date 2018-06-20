@@ -32,8 +32,10 @@ define(["require", "exports", "aurelia-dependency-injection", "aurelia-event-agg
                 this._log('warn', 'Missing parameter for tag-manager plugin..');
                 return;
             }
-            if (data.enabled !== true)
+            if (data.enabled !== true) {
+                this._log('info', 'tag-manager plugin is disabled');
                 return;
+            }
             this._options = data;
             this._attachScriptElements(this._options.key);
             if (this._options.pageTracking.enabled === true)
@@ -42,9 +44,9 @@ define(["require", "exports", "aurelia-dependency-injection", "aurelia-event-agg
         };
         TagManager.prototype._attachScriptElements = function (key) {
             var scriptElement = aurelia_pal_1.DOM.createElement('script');
-            scriptElement.text = '(function (w, d, s, l, i) { console.log(\'Google Tag Manager INIT\'); w[l] = w[l] || []; w[l].push({\'gtm.start\':new Date().getTime(), event: \'gtm.js\'}); var f = d.getElementsByTagName(s)[0],' +
-                'j = d.createElement(s), dl = l != \'dataLayer\' ? \'&l=\' + l : \'\'; j.async=true; j.src = \'https://www.googletagmanager.com/gtm.js?id=\' + i + dl; f.parentNode.insertBefore(j, f);' +
-                ("})(window, document, 'script', 'dataLayer', '" + key + "');");
+            scriptElement.text = "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});varf=d.getElementsByTagName(s)[0]," +
+                "j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);" +
+                ("})(window,document,'script','dataLayer','" + key + "');");
             var noscriptElement = aurelia_pal_1.DOM.createElement('noscript');
             var iframeElement = aurelia_pal_1.DOM.createElement('iframe');
             iframeElement.height = '0';
@@ -71,7 +73,7 @@ define(["require", "exports", "aurelia-dependency-injection", "aurelia-event-agg
                 this.dataLayer = aurelia_pal_1.PLATFORM.global.dataLayer;
             }
             this.dataLayer.push({
-                'event': 'Pageview',
+                'event': this._options.pageTracking.name,
                 'url': path
             });
         };

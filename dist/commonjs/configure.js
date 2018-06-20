@@ -6,6 +6,7 @@ var Configure = /** @class */ (function () {
             key: '',
             enabled: true,
             pageTracking: {
+                name: 'Page View',
                 enabled: true
             },
             logging: {

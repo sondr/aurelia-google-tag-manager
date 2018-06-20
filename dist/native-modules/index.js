@@ -1,5 +1,4 @@
 import { TagManager } from './tag-manager';
-import { Configure } from './configure';
 export function configure(aurelia, configCallback) {
     var instance = aurelia.container.get(TagManager);
     if (configCallback !== undefined && typeof (configCallback) === 'function') {
@@ -7,5 +6,5 @@ export function configure(aurelia, configCallback) {
     }
     //aurelia.globalResources([]);
 }
-export { Configure };
 export { TagManager };
+//export { Configure };

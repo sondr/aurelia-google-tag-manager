@@ -11,6 +11,7 @@ System.register([], function (exports_1, context_1) {
                         key: '',
                         enabled: true,
                         pageTracking: {
+                            name: 'Page View',
                             enabled: true
                         },
                         logging: {

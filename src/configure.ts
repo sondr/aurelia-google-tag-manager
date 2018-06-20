@@ -1,4 +1,4 @@
-export interface ConfigInterface {
+export interface OptionsInterface {
     key: string;
     enabled: boolean;
     pageTracking: PropertyOptions;
@@ -7,18 +7,20 @@ export interface ConfigInterface {
 }
 
 export interface PropertyOptions {
-    enabled: boolean;
+    name?: string;
+    enabled?: boolean;
 }
 
 
 export class Configure {
-    private _options: ConfigInterface;
+    private _options: OptionsInterface;
 
     constructor() {
         this._options = {
             key: '',
             enabled: true,
             pageTracking: {
+                name: 'Page View',
                 enabled: true
             },
             logging: {
@@ -27,7 +29,7 @@ export class Configure {
         };
     }
 
-    options(opts: string | ConfigInterface) {
+    options(opts: string | OptionsInterface) {
         if (!opts) return false;
         if (typeof opts === 'string') this._options.key = opts;
         else if (opts) Object.assign(this._options, opts);

@@ -1,5 +1,5 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { Configure, ConfigInterface } from './configure';
+import { Configure, OptionsInterface } from './configure';
 export declare class TagManager {
     private _eventAggregator;
     private _initialized;
@@ -10,7 +10,7 @@ export declare class TagManager {
     constructor(eventAggregator: EventAggregator, configuration: Configure);
     private _attachPageTracker;
     private _log;
-    init(initData: string | ConfigInterface): void;
+    init(initData: string | OptionsInterface): void;
     private _attachScriptElements;
     private _trackPage;
 }

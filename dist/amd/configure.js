@@ -7,6 +7,7 @@ define(["require", "exports"], function (require, exports) {
                 key: '',
                 enabled: true,
                 pageTracking: {
+                    name: 'Page View',
                     enabled: true
                 },
                 logging: {

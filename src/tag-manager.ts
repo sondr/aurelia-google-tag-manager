@@ -2,7 +2,7 @@ import { inject } from 'aurelia-dependency-injection';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import * as LogManager from 'aurelia-logging';
 import { PLATFORM, DOM } from 'aurelia-pal';
-import { Configure, ConfigInterface } from './configure';
+import { Configure, OptionsInterface } from './configure';
 
 
 @inject(EventAggregator, Configure)
@@ -10,7 +10,7 @@ export class TagManager {
     private _eventAggregator: EventAggregator;
     private _initialized: boolean;
     private _logger: LogManager.Logger;
-    private _options: ConfigInterface;
+    private _options: OptionsInterface;
     private _settings: Configure
 
     public dataLayer: any[];
@@ -31,20 +31,23 @@ export class TagManager {
             });
     }
 
-    private _log(level: 'debug' | 'error' | 'info' | 'warn', message: string) {
+    private _log(level: LogLevels, message: string) {
         if (!this._options.logging)
             return;
 
         this._logger[level](message);
     }
 
-    public init(initData: string | ConfigInterface) {
+    public init(initData: string | OptionsInterface) {
         let data = this._settings.options(initData);
         if (data === false) {
             this._log('warn', 'Missing parameter for tag-manager plugin..');
             return;
         }
-        if (data.enabled !== true) return;
+        if (data.enabled !== true){ 
+            this._log('info', 'tag-manager plugin is disabled');
+            return;
+        }
 
         this._options = data;
         this._attachScriptElements(this._options.key);
@@ -55,9 +58,9 @@ export class TagManager {
 
     private _attachScriptElements(key: string) {
         const scriptElement = DOM.createElement('script') as HTMLScriptElement;
-        scriptElement.text = '(function (w, d, s, l, i) { console.log(\'Google Tag Manager INIT\'); w[l] = w[l] || []; w[l].push({\'gtm.start\':new Date().getTime(), event: \'gtm.js\'}); var f = d.getElementsByTagName(s)[0],' +
-            'j = d.createElement(s), dl = l != \'dataLayer\' ? \'&l=\' + l : \'\'; j.async=true; j.src = \'https://www.googletagmanager.com/gtm.js?id=\' + i + dl; f.parentNode.insertBefore(j, f);' +
-            `})(window, document, 'script', 'dataLayer', '${key}');`
+        scriptElement.text = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});varf=d.getElementsByTagName(s)[0],` +
+            `j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);` +
+            `})(window,document,'script','dataLayer','${key}');`
 
         const noscriptElement = DOM.createElement('noscript');
         const iframeElement = DOM.createElement('iframe') as HTMLIFrameElement;
@@ -91,8 +94,10 @@ export class TagManager {
         }
 
         this.dataLayer.push({
-            'event': 'Pageview',
+            'event': this._options.pageTracking.name,
             'url': path
         });
     }
 }
+
+type LogLevels = 'debug' | 'error' | 'info' | 'warn';
