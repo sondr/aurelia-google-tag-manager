@@ -7,7 +7,7 @@ define(["require", "exports"], function (require, exports) {
                 key: '',
                 enabled: true,
                 pageTracking: {
-                    name: 'Page View',
+                    name: 'PageView',
                     enabled: true
                 },
                 logging: {
@@ -17,10 +17,10 @@ define(["require", "exports"], function (require, exports) {
         }
         Configure.prototype.options = function (opts) {
             if (!opts)
-                return false;
-            if (typeof opts === 'string')
+                this._options.enabled = false;
+            else if (typeof opts === 'string')
                 this._options.key = opts;
-            else if (opts)
+            else
                 Object.assign(this._options, opts);
             return this._options;
         };

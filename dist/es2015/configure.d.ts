@@ -12,7 +12,7 @@ export interface PropertyOptions {
 export declare class Configure {
     private _options;
     constructor();
-    options(opts: string | OptionsInterface): false | OptionsInterface;
+    options(opts: string | OptionsInterface): OptionsInterface;
     getOptions(): OptionsInterface;
     get(key: string): string | boolean | PropertyOptions;
 }

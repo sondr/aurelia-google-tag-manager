@@ -20,7 +20,7 @@ export class Configure {
             key: '',
             enabled: true,
             pageTracking: {
-                name: 'Page View',
+                name: 'PageView',
                 enabled: true
             },
             logging: {
@@ -30,9 +30,9 @@ export class Configure {
     }
 
     options(opts: string | OptionsInterface) {
-        if (!opts) return false;
-        if (typeof opts === 'string') this._options.key = opts;
-        else if (opts) Object.assign(this._options, opts);
+        if (!opts) this._options.enabled = false;
+        else if (typeof opts === 'string') this._options.key = opts;
+        else Object.assign(this._options, opts);
         return this._options;
     }
 
