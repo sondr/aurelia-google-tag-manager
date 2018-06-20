@@ -1,6 +1,8 @@
 export interface OptionsInterface {
     key: string;
     enabled: boolean;
+    resetDatalayerOnPageChange: boolean;
+    trackCurrentPageOnEnable: boolean;
     pageTracking: PropertyOptionsInterface;
     logging: PropertyOptionsInterface;
     [key: string]: string | boolean | PropertyOptionsInterface;

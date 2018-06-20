@@ -16,11 +16,13 @@ export declare class TagManager {
     enable(): void;
     disable(): void;
     isActive(): boolean;
+    get_Key(): string;
     private _setup;
     private _checkSettings;
     private _attachScriptElements;
     private _detachScripts;
     private _attachPageTracker;
+    private _resetDataLayer;
     private _log;
     private _trackPage;
 }

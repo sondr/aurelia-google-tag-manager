@@ -37,6 +37,7 @@ export class TagManager {
     public enable() {
         this._options.enabled = true;
         this._setup();
+        if (this._options.trackCurrentPageOnEnable) this._trackPage(PLATFORM.global.location.pathname, DOM.title);
     }
 
     public disable() {
@@ -48,6 +49,10 @@ export class TagManager {
 
     public isActive() {
         return this._options.enabled === true;
+    }
+
+    public get_Key() {
+        return this._options.key;
     }
 
     private _setup() {
@@ -122,8 +127,15 @@ export class TagManager {
     private _attachPageTracker() {
         if (this._settings)
             this._subscriptions.pageTracker = this._eventAggregator.subscribe('router:navigation:success', (data: any) => {
+                if (this._options.resetDatalayerOnPageChange) this._resetDataLayer();
                 this._trackPage(data.instruction.fragment, data.instruction.config.title);
             });
+    }
+
+    private _resetDataLayer() {
+        const gtm = PLATFORM.global.google_tag_manager[this._options.key];
+        if (gtm && gtm.dataLayer && typeof gtm.dataLayer.reset === 'function')
+            gtm.dataLayer.reset();
     }
 
     private _log(level: LogLevels, message: string) {

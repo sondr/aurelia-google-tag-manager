@@ -1,6 +1,8 @@
 export interface OptionsInterface {
     key: string;
     enabled: boolean;
+    resetDatalayerOnPageChange: boolean;
+    trackCurrentPageOnEnable: boolean;
     pageTracking: PropertyOptionsInterface;
     logging: PropertyOptionsInterface;
     [key: string]: string | boolean | PropertyOptionsInterface;
@@ -38,6 +40,8 @@ export class Configure {
         this._options = {
             key: '',
             enabled: true,
+            resetDatalayerOnPageChange: true,
+            trackCurrentPageOnEnable: true,
             pageTracking: new PropertyOption(true, 'PageView'),
             logging: new PropertyOption()
         };

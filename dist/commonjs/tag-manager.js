@@ -28,6 +28,8 @@ var TagManager = /** @class */ (function () {
     TagManager.prototype.enable = function () {
         this._options.enabled = true;
         this._setup();
+        if (this._options.trackCurrentPageOnEnable)
+            this._trackPage(aurelia_pal_1.PLATFORM.global.location.pathname, aurelia_pal_1.DOM.title);
     };
     TagManager.prototype.disable = function () {
         this._options.enabled = false;
@@ -39,6 +41,9 @@ var TagManager = /** @class */ (function () {
     };
     TagManager.prototype.isActive = function () {
         return this._options.enabled === true;
+    };
+    TagManager.prototype.get_Key = function () {
+        return this._options.key;
     };
     TagManager.prototype._setup = function () {
         if (!this._checkSettings(this._options))
@@ -107,8 +112,15 @@ var TagManager = /** @class */ (function () {
         var _this = this;
         if (this._settings)
             this._subscriptions.pageTracker = this._eventAggregator.subscribe('router:navigation:success', function (data) {
+                if (_this._options.resetDatalayerOnPageChange)
+                    _this._resetDataLayer();
                 _this._trackPage(data.instruction.fragment, data.instruction.config.title);
             });
+    };
+    TagManager.prototype._resetDataLayer = function () {
+        var gtm = aurelia_pal_1.PLATFORM.global.google_tag_manager[this._options.key];
+        if (gtm && gtm.dataLayer && typeof gtm.dataLayer.reset === 'function')
+            gtm.dataLayer.reset();
     };
     TagManager.prototype._log = function (level, message) {
         if (!this._options.logging)

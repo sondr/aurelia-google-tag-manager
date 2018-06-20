@@ -21,6 +21,8 @@ var Configure = /** @class */ (function () {
         this._options = {
             key: '',
             enabled: true,
+            resetDatalayerOnPageChange: true,
+            trackCurrentPageOnEnable: true,
             pageTracking: new PropertyOption(true, 'PageView'),
             logging: new PropertyOption()
         };
