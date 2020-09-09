@@ -10,13 +10,14 @@ export declare class TagManager {
     private _logger;
     private _options;
     private _settings;
-    dataLayer: any[];
+    private _dataLayer;
     constructor(eventAggregator: EventAggregator, configuration: Configure);
     init(initData: string | OptionsInterface): void;
+    dispatchDataLayerEvent(event: Object): void;
     enable(): void;
     disable(): void;
     isActive(): boolean;
-    get_Key(): string;
+    getKey(): string;
     private _setup;
     private _checkSettings;
     private _attachScriptElements;
@@ -25,4 +26,5 @@ export declare class TagManager {
     private _resetDataLayer;
     private _log;
     private _trackPage;
+    private _ensureDataLayer;
 }

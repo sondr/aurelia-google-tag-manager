@@ -1,6 +1,6 @@
 {
   "name": "aurelia-google-tag-manager",
-  "version": "0.1.0",
+  "version": "0.8.0",
   "description": "Plugin for integration of google tag manager with Aurelia.",
   "keywords": [
     "aurelia",
@@ -22,8 +22,11 @@
     "build:system": "cross-env tsc --outDir dist/system --module system",
     "prebuild": "cross-env rimraf dist",
     "postbuild": "gulp",
-    "build": "concurrently \"npm run build:amd\" \"npm run build:commonjs\" \"npm run build:es2015\" \"npm run build:native-modules\" \"npm run build:system\"",
+    "build": "npm-run-all build:amd build:commonjs build:es2015 build:native-modules build:system",
     "prepare-release": "cross-env npm run build && semantic-release pre && npm publish && semantic-release post"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "jest": {
     "modulePaths": [
@@ -87,39 +90,39 @@
     }
   },
   "dependencies": {
-    "aurelia-binding": "^1.5.0",
-    "aurelia-dependency-injection": "^1.3.2",
-    "aurelia-event-aggregator": "^1.0.1",
-    "aurelia-framework": "^1.1.5",
-    "aurelia-loader": "^1.0.0",
-    "aurelia-logging": "^1.3.1",
-    "aurelia-metadata": "^1.0.3",
-    "aurelia-pal": "^1.4.0",
-    "aurelia-path": "^1.1.1",
-    "aurelia-task-queue": "^1.2.1",
-    "aurelia-templating": "^1.6.0",
-    "aurelia-templating-binding": "^1.4.0"
+    "aurelia-binding": "^2.5.4",
+    "aurelia-dependency-injection": "^1.5.2",
+    "aurelia-event-aggregator": "^1.0.3",
+    "aurelia-framework": "^1.3.1",
+    "aurelia-loader": "^1.0.2",
+    "aurelia-logging": "^1.5.2",
+    "aurelia-metadata": "^1.0.6",
+    "aurelia-pal": "^1.8.2",
+    "aurelia-path": "^1.1.5",
+    "aurelia-task-queue": "^1.3.3",
+    "aurelia-templating": "^1.10.4",
+    "aurelia-templating-binding": "^1.5.3"
   },
   "devDependencies": {
     "@types/jest": "^21.1.5",
-    "@types/node": "^8.0.50",
+    "@types/node": "^14.6.4",
     "aurelia-bootstrapper": "^2.1.1",
     "aurelia-loader-nodejs": "^1.0.1",
     "aurelia-pal-browser": "^1.3.0",
-    "aurelia-pal-nodejs": "^1.0.0-beta.2.0.0",
+    "aurelia-pal-nodejs": "^2.0.0",
     "aurelia-polyfills": "^1.2.2",
-    "aurelia-testing": "^1.0.0-beta.4.0.0",
-    "concurrently": "^3.5.0",
-    "cross-env": "^5.1.1",
-    "gulp": "^3.9.1",
+    "aurelia-testing": "^1.0.0",
+    "cross-env": "^5.0.0",
+    "gulp": "^4.0.2",
     "gulp-sass": "^3.1.0",
     "jest": "^21.2.1",
     "jest-css-modules": "^1.1.0",
     "node-sass": "^4.6.0",
+    "npm-run-all": "^4.1.5",
     "rimraf": "^2.6.2",
     "semantic-release": "^8.2.0",
     "ts-jest": "^21.2.1",
-    "tslint": "^5.8.0",
-    "typescript": "^2.6.1"
+    "tslint": "^6.1.3",
+    "typescript": "^4.0.2"
   }
 }

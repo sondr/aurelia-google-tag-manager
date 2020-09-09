@@ -6,6 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TagManager = void 0;
 var aurelia_dependency_injection_1 = require("aurelia-dependency-injection");
 var aurelia_event_aggregator_1 = require("aurelia-event-aggregator");
 var LogManager = require("aurelia-logging");
@@ -25,6 +26,10 @@ var TagManager = /** @class */ (function () {
         this._options = data;
         this._setup();
     };
+    TagManager.prototype.dispatchDataLayerEvent = function (event) {
+        this._ensureDataLayer();
+        this._dataLayer.push(event);
+    };
     TagManager.prototype.enable = function () {
         this._options.enabled = true;
         this._setup();
@@ -42,7 +47,7 @@ var TagManager = /** @class */ (function () {
     TagManager.prototype.isActive = function () {
         return this._options.enabled === true;
     };
-    TagManager.prototype.get_Key = function () {
+    TagManager.prototype.getKey = function () {
         return this._options.key;
     };
     TagManager.prototype._setup = function () {
@@ -95,8 +100,9 @@ var TagManager = /** @class */ (function () {
             body.insertBefore(this._noScriptElement, body.firstChild);
         }
         this._flags.scriptsAttached = true;
-        aurelia_pal_1.PLATFORM.global.dataLayer = aurelia_pal_1.PLATFORM.global.dataLayer || [];
-        this.dataLayer = aurelia_pal_1.PLATFORM.global.dataLayer;
+        // PLATFORM.global.dataLayer = PLATFORM.global.dataLayer || [];
+        // this.dataLayer = PLATFORM.global.dataLayer;
+        this._ensureDataLayer();
     };
     TagManager.prototype._detachScripts = function () {
         [this._noScriptElement, this._scriptElement].forEach(function (el) {
@@ -133,14 +139,17 @@ var TagManager = /** @class */ (function () {
             this._log('warn', "Tag manager is not initialized");
             return;
         }
-        if (!this.dataLayer) {
-            aurelia_pal_1.PLATFORM.global.dataLayer = aurelia_pal_1.PLATFORM.global.dataLayer || [];
-            this.dataLayer = aurelia_pal_1.PLATFORM.global.dataLayer;
-        }
-        this.dataLayer.push({
+        this._ensureDataLayer();
+        this._dataLayer.push({
             'event': this._options.pageTracking.name,
             'url': path
         });
+    };
+    TagManager.prototype._ensureDataLayer = function () {
+        if (!this._dataLayer) {
+            aurelia_pal_1.PLATFORM.global.dataLayer = aurelia_pal_1.PLATFORM.global.dataLayer || [];
+            this._dataLayer = aurelia_pal_1.PLATFORM.global.dataLayer;
+        }
     };
     TagManager = __decorate([
         aurelia_dependency_injection_1.inject(aurelia_event_aggregator_1.EventAggregator, configure_1.Configure)

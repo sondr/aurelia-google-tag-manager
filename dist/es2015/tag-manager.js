@@ -23,6 +23,10 @@ var TagManager = /** @class */ (function () {
         this._options = data;
         this._setup();
     };
+    TagManager.prototype.dispatchDataLayerEvent = function (event) {
+        this._ensureDataLayer();
+        this._dataLayer.push(event);
+    };
     TagManager.prototype.enable = function () {
         this._options.enabled = true;
         this._setup();
@@ -40,7 +44,7 @@ var TagManager = /** @class */ (function () {
     TagManager.prototype.isActive = function () {
         return this._options.enabled === true;
     };
-    TagManager.prototype.get_Key = function () {
+    TagManager.prototype.getKey = function () {
         return this._options.key;
     };
     TagManager.prototype._setup = function () {
@@ -93,8 +97,9 @@ var TagManager = /** @class */ (function () {
             body.insertBefore(this._noScriptElement, body.firstChild);
         }
         this._flags.scriptsAttached = true;
-        PLATFORM.global.dataLayer = PLATFORM.global.dataLayer || [];
-        this.dataLayer = PLATFORM.global.dataLayer;
+        // PLATFORM.global.dataLayer = PLATFORM.global.dataLayer || [];
+        // this.dataLayer = PLATFORM.global.dataLayer;
+        this._ensureDataLayer();
     };
     TagManager.prototype._detachScripts = function () {
         [this._noScriptElement, this._scriptElement].forEach(function (el) {
@@ -131,14 +136,17 @@ var TagManager = /** @class */ (function () {
             this._log('warn', "Tag manager is not initialized");
             return;
         }
-        if (!this.dataLayer) {
-            PLATFORM.global.dataLayer = PLATFORM.global.dataLayer || [];
-            this.dataLayer = PLATFORM.global.dataLayer;
-        }
-        this.dataLayer.push({
+        this._ensureDataLayer();
+        this._dataLayer.push({
             'event': this._options.pageTracking.name,
             'url': path
         });
+    };
+    TagManager.prototype._ensureDataLayer = function () {
+        if (!this._dataLayer) {
+            PLATFORM.global.dataLayer = PLATFORM.global.dataLayer || [];
+            this._dataLayer = PLATFORM.global.dataLayer;
+        }
     };
     TagManager = __decorate([
         inject(EventAggregator, Configure)

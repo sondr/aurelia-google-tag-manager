@@ -18,7 +18,7 @@ export class TagManager {
     private _options: OptionsInterface;
     private _settings: Configure
 
-    public dataLayer: any[];
+    private _dataLayer: any[];
 
     constructor(eventAggregator: EventAggregator, configuration: Configure) {
         this._initialized = false;
@@ -33,6 +33,13 @@ export class TagManager {
 
         this._setup();
     }
+
+    public dispatchDataLayerEvent(event: Object) {
+        this._ensureDataLayer();
+
+        this._dataLayer.push(event);
+    }
+
 
     public enable() {
         this._options.enabled = true;
@@ -51,7 +58,7 @@ export class TagManager {
         return this._options.enabled === true;
     }
 
-    public get_Key() {
+    public getKey() {
         return this._options.key;
     }
 
@@ -110,8 +117,9 @@ export class TagManager {
 
         this._flags.scriptsAttached = true;
 
-        PLATFORM.global.dataLayer = PLATFORM.global.dataLayer || [];
-        this.dataLayer = PLATFORM.global.dataLayer;
+        // PLATFORM.global.dataLayer = PLATFORM.global.dataLayer || [];
+        // this.dataLayer = PLATFORM.global.dataLayer;
+        this._ensureDataLayer();
     }
 
     private _detachScripts() {
@@ -153,15 +161,19 @@ export class TagManager {
             return;
         }
 
-        if (!this.dataLayer) {
-            PLATFORM.global.dataLayer = PLATFORM.global.dataLayer || [];
-            this.dataLayer = PLATFORM.global.dataLayer;
-        }
+        this._ensureDataLayer();
 
-        this.dataLayer.push({
+        this._dataLayer.push({
             'event': this._options.pageTracking.name,
             'url': path
         });
+    }
+
+    private _ensureDataLayer(): void {
+        if (!this._dataLayer) {
+            PLATFORM.global.dataLayer = PLATFORM.global.dataLayer || [];
+            this._dataLayer = PLATFORM.global.dataLayer;
+        }
     }
 }
 
